@@ -1,0 +1,7 @@
+"0","sample <- seq(from=-5, to=5, length.out = number.obs)"
+"0","par(mfrow=c(4,4), mar=c(2,2,2,1))"
+"0","for(i in 1:4){"
+"0","  el <- apply(a[[i]],1,cumsum )"
+"0","  matplot(sample,el, type = 'l', lwd = 0.00001, lty=3,main = paste('M=', M[i]))"
+"0","  curve(pnorm, add=T, col='black', lwd=2)"
+"0","}"

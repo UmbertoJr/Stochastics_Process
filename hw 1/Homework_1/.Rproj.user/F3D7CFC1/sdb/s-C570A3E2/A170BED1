@@ -1,0 +1,21 @@
+{
+    "collab_server" : "",
+    "contents" : "\n# simulation of data ------------------------------------------------------\nN <- 10000\ncomponents <- sample(1:3,prob=c(0.5,0.3,0.2),size=N,replace=TRUE)\nmus <- c(2.5,0.5,1.5)\nsds <- sqrt(c(0.5,0.7,2))\n\nsamples <- rnorm(n=N,mean=mus[components],sd=sds[components])\n\nhist(samples, probability = T)\n\nx <- seq(-20,20,0.01)\ntruth <- 0.5*dnorm(x,mean=mus[1],sd=sds[1])+\n  0.3*dnorm(x,mean=mus[2],sd=sds[2])+0.2*dnorm(x,mean=mus[3],sd=sds[3])\nlines(x,truth,col=\"red\",lwd=2)\nlines(density(samples), type = 'l', col='blue')\n\n\n# posterior analysis -------------------------------------------------------\n#save(samples.20,samples.200,samples.2000,file = 'mixtureofnormalsim.RData')\nload(file = 'mixtureofnormalsim.RData')\n\n\nferguson.posterior <- function(samp, M){\n  number.obs <- 1000\n  sample <- seq(from=-5, to=5, length.out = number.obs)\n  par <- rep(0,number.obs)\n  sim <- rep(0,number.obs)\n  par[1] <- M*pnorm(sample[1])+ sum(samp<=sample[1])\n  sim[1] <- rgamma(1,par[1])\n  for(i in 2:number.obs){\n    par[i] <- M*(pnorm(sample[i]) - pnorm(sample[i-1])) + sum(samp<=sample[i] & samp > sample[i-1])\n    sim[i] <- rgamma(1,par[i])\n  }\n  tot <- sum(sim)\n  ret <- sim/tot\n  return(ret)\n}\n\nrisul <- ferguson.posterior(samples.2000,3)\n\nsample <- seq(from=-5, to=5, length.out = 1000)\n\n\nplot(sample,risul,add=T)\nlines(x,truth,col=\"red\",lwd=2)\n\nplot(sample,cumsum(risul), type = 'l')\ntruth.cdf <- 0.5*pnorm(x,mean=mus[1],sd=sds[1])+\n  0.3*pnorm(x,mean=mus[2],sd=sds[2])+0.2*pnorm(x,mean=mus[3],sd=sds[3])\nlines(x,truth.cdf,col=\"red\",lwd=2)\n\n\n\n# sethuraman --------------------------------------------------------------\n\nsethuraman.post <- function(samp, M){\n  n <- 5000- length(samp)\n  y <- rnorm(n)\n  thet <- rbeta(5000,shape1 = 1, shape2 = M+ length(samp))\n  prob <- rep(0,5000)\n  prob[1] <- thet[1]\n  for(i in 2:5000){\n    prob[i]<- thet[i]*prod(1 - thet[1:i-1])\n  }\n  obs <- c(samp,y)\n  dat <- sample(obs,size= number.obs, prob=prob,replace=T)\n  return(dat)\n}\n\nrisul <- sethuraman.post(samples.2000,3)\n\nhist(risul, probability = T); lines(x,truth,col=\"red\",lwd=2)\n\n\n\n\n# Pòlia urn and Chinese Restaurant Process --------------------------------\n\nchinese.rest <- function(dati, M, mu, s){\n  pr= M/(M+length(dati))\n  sim <- rep(0,5000)\n  for(i in 1:5000){\n    do <- rbinom(1,1,pr)\n    if(do){\n      sim[i] <- rnorm(1,mu,s)\n    }else{\n      sim[i] <- sample(dati, size=1, replace=T)\n    }\n  }\n  thet <- rbeta(5000,shape1 = 1, shape2 = M+length(dati))\n  prob <- rep(0,5000)\n  prob[1] <- thet[1]\n  for(i in 2:5000){\n    prob[i]<- thet[i]*prod(1 - thet[1:i-1])\n  }\n  dat <- sample(sim, size= 5000, prob=prob,replace=T)\n  return(dat)\n}\n\nmu <- mean(samples.2000); mu\nse <- sd(samples.2000); se\n\nrisul <- chinese.rest(samples.2000, M = 1, mu = mu, s = se)\n\npar(mfrow=c(1,2))\n\nplot(ecdf(risul))\nlines(x,truth.cdf,col=\"red\",lwd=2)\nlines(density(risul))\n\nhist(risul, probability = T, breaks = 20)\nlines(x,truth,col=\"red\",lwd=2)\nplot(ecdf(samples))\nlines(x,truth.cdf,col=\"red\",lwd=2)\n\n",
+    "created" : 1509895125771.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "3029273144",
+    "id" : "A170BED1",
+    "lastKnownWriteTime" : 1509987320,
+    "last_content_update" : 1509987320290,
+    "path" : "C:/Users/Umbertojunior/Desktop/data science/third Semestr/stochastic process/hw 1/Homework_1/third_ex.R",
+    "project_path" : "third_ex.R",
+    "properties" : {
+        "tempName" : "Untitled1"
+    },
+    "relative_order" : 3,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

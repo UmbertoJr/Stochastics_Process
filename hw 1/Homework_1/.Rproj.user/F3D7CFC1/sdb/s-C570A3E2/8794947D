@@ -1,0 +1,21 @@
+{
+    "collab_server" : "",
+    "contents" : "load(file = 'mixtureofnormalsim.RData')\n\n\nrisul <- chinese.rest(samples.20, M = 1, mu = mu, s = se)\n\npar(mfrow=c(3,2))\nplot(ecdf(risul), main = 'posterior c.d.f. sample for M=1')\nlines(x,truth.cdf,col=\"red\",lwd=2)\nhist(risul, probability = T, breaks = 20, main = 'posterior p.d.f. sample for M=1')\nlines(x,truth,col=\"red\",lwd=2)\nlines(density(risul))\n\n\n\nmu <- mean(samples.2000)\nse <- sd(samples.2000)\n\nsim=100\nnumber.obs = 5000\nsamp <- matrix(nrow = sim, ncol = number.obs)\n\n\nfor(l in 1:sim){\n  samp[l,] <- chinese.rest(samples.2000, M = 1, mu = mu, s = se)\n}\nsave(samp, file = 'simulation_for_m1_2000.RData')\n\nmus <- c(2.5,0.5,1.5)\nsds <- sqrt(c(0.5,0.7,2))\nx <- seq(-20,20,0.01)\n\ntruth <- 0.5*dnorm(x,mean=mus[1],sd=sds[1])+\n  0.3*dnorm(x,mean=mus[2],sd=sds[2])+0.2*dnorm(x,mean=mus[3],sd=sds[3])\nlines(x,truth,col=\"red\",lwd=2)\nlines(density(samples), type = 'l', col='black')\n\ntruth.cdf <- 0.5*pnorm(x,mean=mus[1],sd=sds[1])+\n  0.3*pnorm(x,mean=mus[2],sd=sds[2])+0.2*pnorm(x,mean=mus[3],sd=sds[3])\nplot(ecdf(samples))\nlines(x,truth.cdf,col=\"red\",lwd=2)\n\n\n\nrequire(randomcoloR)\n\ncurve(pnorm(x,mu, se),  col='black', lwd=2, from = -5,to=5,main = 'M=1 samp 20')\nfor(i in 1:100){\n  plot(ecdf(samp[i,]),verticals=TRUE, do.points=FALSE, lwd = 0.00001, lty=1\n       , add=T,col=randomColor())\n}\ncurve(pnorm(x,mu, se),  col='black', lwd=2, from = -5,to=5, add=T)\nlines(x,truth.cdf,col=\"red\",lwd=2)\n\n\n\ncurve(dnorm(x,mu, se),  col='black', lwd=2, from = -5,to=5,main =  'p.d.f M=5 samp 20',\n      ylim=c(0,.5))\nfor(i in 1:100){\n  lines(density(samp[i,]), lwd = 0.00001, \n        lty=1,col=randomColor())\n}\ncurve(dnorm(x,mu, se),  col='black', lwd=2, from = -5,to=5, add=T)\nlines(x,truth,col=\"red\",lwd=2)\n\nmu.fun <- rep(0,sim)\nvar.fun <- rep(0,sim)\n\nfor(i in 1:sim){\n  mu.fun[i] <- mean(samp[i,])\n  var.fun[i] <- var(samp[i,])\n}\nplot(density(mu.fun), main = 'mean distribution')\nsegments(x0 = mu,y0 = 0,x1 = mu,y1 = 10, col='red')\nplot(density(var.fun), main = 'variance distribution')\nsegments(x0 = se^2,y0 = 0,x1 = se^2,y1 = 10, col = 'red')\n\n\n\n",
+    "created" : 1510089425205.000,
+    "dirty" : true,
+    "encoding" : "",
+    "folds" : "",
+    "hash" : "400265072",
+    "id" : "8794947D",
+    "lastKnownWriteTime" : 2913107053983724064,
+    "last_content_update" : 1510091221737,
+    "path" : null,
+    "project_path" : null,
+    "properties" : {
+        "tempName" : "Untitled1"
+    },
+    "relative_order" : 5,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

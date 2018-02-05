@@ -1,0 +1,21 @@
+{
+    "collab_server" : "",
+    "contents" : "s.20 <- rnorm(20)\ns.200 <- rnorm(200)\ns.2000 <- rnorm(2000)\n\nchinese.rest <- function(dati, M, mu, s){\n  pr= M/(M+length(dati))\n  sim <- rep(0,5000)\n  for(i in 1:5000){\n    do <- rbinom(1,1,pr)\n    if(do){\n      sim[i] <- rnorm(1,mu,s)\n    }else{\n      sim[i] <- sample(dati, size=1, replace=T)\n    }\n  }\n  thet <- rbeta(5000,shape1 = 1, shape2 = M+length(dati))\n  prob <- rep(0,5000)\n  prob[1] <- thet[1]\n  for(i in 2:5000){\n    prob[i]<- thet[i]*prod(1 - thet[1:i-1])\n  }\n  dat <- sample(sim, size= 5000, prob=prob,replace=T)\n  return(dat)\n}\n\n# simulation\n\nsim.20 <- matrix(nrow = 100, ncol = 5000)\nsim.200 <- matrix(nrow = 100, ncol = 5000)\nsim.2000 <- matrix(nrow = 100, ncol = 5000)\nM=300\nfor(s in 1:100){\n  sim.20[s,]<- chinese.rest(s.20,M= M,0,1)\n  sim.200[s,]<- chinese.rest(s.200,M= M,0,1)\n  sim.2000[s,]<- chinese.rest(s.2000,M= M,0,1)\n}\nsave(sim.20,sim.200,sim.2000,file = 'simulation_normal_m300.RData')\n\ncases <- list(sim.20,sim.200,sim.2000)\ncasi <- c('20 obs','200 obs','2000 obs')\npar(mfrow=c(3,1), mar=c(2,2,1,1))\nfor(m in 1:3){\n  curve(pnorm,  col='black', lwd=2, from = -5,to=5,main = casi[m])\n  for(i in 1:100){\n    plot(ecdf(cases[[m]][i,]),verticals=TRUE, do.points=FALSE, lwd = 0.00001, lty=1\n         , add=T,col=randomColor())\n  }\n  curve(pnorm,  col='black', lwd=2, from = -5,to=5, add=T)\n}\n\npar(mfrow=c(1,1))\nfor(m in 1:3){\n  curve(dnorm,  col='black', lwd=2, from = -5,to=5,main = casi[m],ylim=c(0,.5))\n  for(i in 1:100){\n    lines(density(cases[[m]][i,]), lwd = 0.00001, lty=1\n          ,col=randomColor())\n  }\n  curve(dnorm,  col='black', lwd=2, from = -5,to=5, add=T)\n}\n\n",
+    "created" : 1509988940153.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "3787873112",
+    "id" : "7FD91651",
+    "lastKnownWriteTime" : 1509996286,
+    "last_content_update" : 1509996286301,
+    "path" : "C:/Users/Umbertojunior/Desktop/data science/third Semestr/stochastic process/hw 1/Homework_1/simalation3.R",
+    "project_path" : "simalation3.R",
+    "properties" : {
+        "tempName" : "Untitled1"
+    },
+    "relative_order" : 3,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

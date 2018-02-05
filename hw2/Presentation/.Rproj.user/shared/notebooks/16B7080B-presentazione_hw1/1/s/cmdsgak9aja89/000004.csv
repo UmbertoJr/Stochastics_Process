@@ -1,0 +1,12 @@
+"0","sample <- seq(from=-5, to=5, length.out = number.obs)"
+"0","par(mfrow=c(4,4), mar=c(2,2,2,1))"
+"0","for(i in 1:4){"
+"0","  curve(pnorm, col='black', lwd=2, from = -4, to=4,main = paste('M=', M[i]))"
+"0","  for(l in 1:100){"
+"0","    plot(ecdf(a[[i]][l,]),verticals=TRUE, do.points=FALSE, "
+"0","         lwd = 0.00001, lty=1, add=T,col=randomColor())"
+"0","  }"
+"0","  curve(pnorm, add=T, col='black', lwd=2)"
+"0","}"
+"2","Error in ecdf(a[[i]][l, ]) : 'x' must have 1 or more non-missing values
+"

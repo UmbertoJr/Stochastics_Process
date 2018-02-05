@@ -1,0 +1,21 @@
+{
+    "collab_server" : "",
+    "contents" : "sethuraman.cost <- function(number.obs, M){\n  n <- 5000\n  y <- rnorm(n)\n  thet <- rbeta(n,shape1 = 1, shape2 = M)\n  prob <- rep(0,n)\n  prob[1] <- thet[1]\n  for(i in 2:n){\n    prob[i]<- thet[i]*prod(1 - thet[1:i-1])\n  }\n  dat <- sample(y,size= number.obs, prob=prob,replace=T)\n  return(dat)\n}\n\n\nfunction.M <- function(obs, M){\n  n = length(obs)\n  Z = length(unique(obs))\n  num = Z*log(M)\n  den = log(M)\n  for(i in 1:(n-1)){\n    den = den + log(M + i)\n  }\n  return(num - den)\n}\n\npar(mfrow=c(1,1))\nM = 10\nnumber.obs=100\nobserved <- sethuraman.cost(number.obs,M=M)\nuniq.obs <- unique(observed)\nplot(density(uniq.obs))\n\n\nxx <- seq(from = 0 , to = 150, by = 0.1)\nvalue <- function.M(observed, xx)\nplot(xx, value,type = 'l', col= rgb(1,114,116,250,maxColorValue = 255), main = 'Likelihood estimation of M')\nm.bar <- xx[which.max(value)]\nsegments(m.bar,-1e10,m.bar,1e10,col= rgb(1,114,116,250,maxColorValue = 255))\nsegments(M,-1e10,M,1e10,col = 'red')\nlegend('topright',\n       legend = c(paste('Estimated M = ',round(m.bar,1)),\n                  paste('True M = ',M)),\n       cex = .7)\n\n\n\nM <- c(5, 20 , 50, 100)\nnumber.obs=100\nsim= 100\nm.estimated <- list()\nfor(i in 1:4){\n  m.estimated[[i]] <- rep(0, sim)\n  for(z in 1:sim){\n    observed <- sethuraman.cost(number.obs,M=M[i])\n    value <- function.M(observed, xx)\n    m.estimated[[i]][z] <- xx[which.max(value)]\n  }\n}\n\n#save(m.estimated, file = 'Stima_m.RData')\nload(file = 'Stima_m.RData')\n\npar(mfrow = c(2,2), mar =c(2,2,2,1))\nfor(i in 1:4){\n  hist(m.estimated[[i]], main = 'distribution of M', probability = T, col = 'blue')\n  lines(density(m.estimated[[i]]))\n  m <- mean(m.estimated[[i]])\n  legend('topright',\n         legend = substitute(paste(bar(M),' = ',m), list(m = round(m,1))),\n         cex = 0.5)\n}\n\n\ncompute.prob <- function(obs, M){\n  lo <- function.M(obs, M)\n  un.obs <- unique(obs)\n  num = 0\n  den = 0\n  m.vec = rep(0, length(obs))\n  for(el in un.obs){\n    m.vec[sum(el == obs)] = m.vec[sum(el == obs)] + 1\n  }\n  for(i in (1:length(obs))){\n    num = num + log(i)\n    den = den + m.vec[i]*log(i) + log(factorial(m.vec[i]))\n  }\n  return(lo + num - den)\n}\n\nexp(compute.prob(observed, 11.1)) \nexp(compute.prob(observed, 10))\n\n",
+    "created" : 1513013898767.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "2272741392",
+    "id" : "118E4080",
+    "lastKnownWriteTime" : 1513176894,
+    "last_content_update" : 1513176894577,
+    "path" : "C:/Users/Umbertojunior/Desktop/data science/third Semestr/stochastic process/hw2/Presentation/m_estimation.R",
+    "project_path" : "m_estimation.R",
+    "properties" : {
+        "tempName" : "Untitled1"
+    },
+    "relative_order" : 3,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

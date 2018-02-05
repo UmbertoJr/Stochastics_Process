@@ -1,0 +1,4 @@
+"0","for(m in 1:4){"
+"0","  plot(density(var.fun[[m]]), main = paste('var.fun M=', M[m]))"
+"0","  segments(x0 = (M[m]/(M[m]+1)), y0 = 0,x1 = (M[m]/(M[m]+1)),y1 = 10)"
+"0","}"

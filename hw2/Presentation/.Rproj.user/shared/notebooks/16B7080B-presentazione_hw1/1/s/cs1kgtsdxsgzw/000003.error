@@ -1,0 +1,1 @@
+{"frames":[{"character_number":3,"end_character_number":52,"end_line_number":4,"file":"","func":"sethuraman.cost(number.obs, M = M[i])","line_number":3}],"message":"Error in seq.default(from = -5, to = 5, length.out = number.obs) : \n  object 'number.obs' not found\n"}
